@@ -1,0 +1,9 @@
+.cart-item {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+#cart-summary {
+    padding: 15px;
+    font-size: 18px;
+}
