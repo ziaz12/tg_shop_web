@@ -30,3 +30,11 @@ searchInput.oninput = render;
 brandFilter.onchange = render;
 
 render();
+
+// Визуальный клик для кнопок "Добавить в корзину"
+document.querySelectorAll('.product-card button').forEach(btn => {
+    btn.addEventListener('click', () => {
+        alert('Добавлено в корзину (пока только визуально)');
+    });
+});
+
