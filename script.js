@@ -1,66 +1,79 @@
-// Массив корзины
-let cart = [];
+document.addEventListener("DOMContentLoaded", () => {
+    // Массив товаров (можно расширять)
+    const products = [
+        {name: "Кроссовки Nike Air", brand: "Nike", size: "40", color: "Белый", price: 5000, article: "NA40"},
+        {name: "Кроссовки Adidas Runner", brand: "Adidas", size: "39", color: "Черный", price: 4500, article: "AR39"},
+        {name: "Кроссовки Puma RS-X", brand: "Puma", size: "38", color: "Синий", price: 4800, article: "PR38"}
+    ];
 
-// Функция обновления корзины
-function updateCartUI() {
-    const cartCount = document.getElementById("cart-count");
-    const cartTotal = document.getElementById("cart-total");
-    if (cartCount && cartTotal) {
-        cartCount.innerText = cart.length;
+    const productList = document.getElementById("product-list");
+    const searchInput = document.getElementById("search-input");
+    const brandFilter = document.getElementById("brand-filter");
+    const sizeFilter = document.getElementById("size-filter");
+    const colorFilter = document.getElementById("color-filter");
+    const priceFilter = document.getElementById("price-filter");
+    const filterBtn = document.getElementById("filter-btn");
+    const searchBtn = document.getElementById("search-btn");
+
+    let cart = [];
+
+    // Функция рендера товаров
+    function renderProducts() {
+        productList.innerHTML = "";
+        const search = searchInput.value.toLowerCase();
+        const brand = brandFilter.value;
+        const size = sizeFilter.value;
+        const color = colorFilter.value;
+        const priceMax = parseInt(priceFilter.value);
+
+        products.forEach(p => {
+            // Проверка фильтров
+            const matches = 
+                (!search || p.name.toLowerCase().includes(search) || p.article.toLowerCase().includes(search)) &&
+                (!brand || p.brand === brand) &&
+                (!size || p.size === size) &&
+                (!color || p.color === color) &&
+                (!priceMax || p.price <= priceMax);
+
+            if(matches){
+                const div = document.createElement("div");
+                div.className = "product-card";
+                div.innerHTML = `
+                    <img src="https://via.placeholder.com/150" alt="${p.name}">
+                    <h3>${p.name}</h3>
+                    <p>Бренд: ${p.brand}</p>
+                    <p>Размер: ${p.size}</p>
+                    <p>Цвет: ${p.color}</p>
+                    <p>Цена: ${p.price} ₽</p>
+                    <button>Добавить в корзину</button>
+                `;
+                productList.appendChild(div);
+
+                // Кнопка добавления в корзину
+                div.querySelector("button").addEventListener("click", () => {
+                    cart.push(p);
+                    updateCartUI();
+                    alert(`${p.name} добавлено в корзину`);
+                });
+            }
+        });
+    }
+
+    // Обновление корзины
+    function updateCartUI(){
+        const cartCount = document.getElementById("cart-count");
+        const cartTotal = document.getElementById("cart-total");
         const total = cart.reduce((sum, item) => sum + item.price, 0);
+        cartCount.innerText = cart.length;
         cartTotal.innerText = total + " ₽";
     }
-}
 
-// Обработчик добавления в корзину
-function setupCartButtons() {
-    document.querySelectorAll('.product-card').forEach(card => {
-        const btn = card.querySelector('button');
-        btn.addEventListener('click', () => {
-            const name = card.querySelector('h3').innerText;
-            const priceText = card.querySelector('p:last-of-type').innerText;
-            const price = parseInt(priceText.replace(/\D/g,''));
-            cart.push({name, price});
-            updateCartUI();
-            alert(`${name} добавлено в корзину`);
-        });
-    });
-}
+    // Обработчики поиска и фильтров
+    filterBtn.addEventListener("click", renderProducts);
+    searchBtn.addEventListener("click", renderProducts);
+    searchInput.addEventListener("keypress", (e) => { if(e.key === "Enter") renderProducts(); });
 
-// Фильтры
-function applyFilters() {
-    const search = document.getElementById("search-input").value.toLowerCase();
-    const brand = document.getElementById("brand-filter").value;
-    const size = document.getElementById("size-filter").value;
-    const color = document.getElementById("color-filter").value;
-    const priceMax = parseInt(document.getElementById("price-filter").value);
-
-    document.querySelectorAll('.product-card').forEach(card => {
-        const name = card.querySelector('h3').innerText.toLowerCase();
-        const cardBrand = card.querySelector('p:nth-of-type(1)').innerText.split(": ")[1];
-        const cardSize = card.querySelector('p:nth-of-type(2)').innerText.split(": ")[1];
-        const cardColor = card.querySelector('p:nth-of-type(3)').innerText.split(": ")[1];
-        const cardPrice = parseInt(card.querySelector('p:nth-of-type(4)').innerText.replace(/\D/g,''));
-
-        const matches =
-            (!search || name.includes(search)) &&
-            (!brand || cardBrand === brand) &&
-            (!size || cardSize === size) &&
-            (!color || cardColor === color) &&
-            (!priceMax || cardPrice <= priceMax);
-
-        card.style.display = matches ? '' : 'none';
-    });
-}
-
-// Инициализация
-document.getElementById("search-btn").addEventListener("click", applyFilters);
-document.getElementById("filter-btn").addEventListener("click", applyFilters);
-
-// Чтобы поиск по клавише Enter тоже работал
-document.getElementById("search-input").addEventListener("keypress", function(e){
-    if(e.key === "Enter") applyFilters();
+    // Инициализация
+    renderProducts();
 });
 
-// Настройка кнопок корзины после загрузки
-setupCartButtons();
