@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Верхняя панель: Корзина и баланс -->
     <header>
         <div id="cart-bar">
             🛒 <span id="cart-count">0</span> товаров - <span id="cart-total">0 ₽</span>
@@ -17,13 +16,11 @@
         </div>
     </header>
 
-    <!-- Поиск -->
     <section id="search-section">
         <input type="text" placeholder="Поиск по названию или номеру" id="search-input">
         <button id="search-btn">Найти</button>
     </section>
 
-    <!-- Фильтры -->
     <section id="filters">
         <select id="brand-filter">
             <option value="">Все бренды</option>
@@ -50,27 +47,9 @@
         <button id="filter-btn">Применить</button>
     </section>
 
-    <!-- Каталог товаров -->
-    <section id="product-list">
-        <!-- Пример карточки товара -->
-        <div class="product-card">
-            <img src="https://via.placeholder.com/150" alt="Кроссовки">
-            <h3>Кроссовки Nike Air</h3>
-            <p>Бренд: Nike</p>
-            <p>Размер: 40</p>
-            <p>Цвет: Белый</p>
-            <p>Цена: 5000 ₽</p>
-            <button>Добавить в корзину</button>
-        </div>
-        <div class="product-card">
-            <img src="https://via.placeholder.com/150" alt="Кроссовки">
-            <h3>Кроссовки Adidas Runner</h3>
-            <p>Бренд: Adidas</p>
-            <p>Размер: 39</p>
-            <p>Цвет: Черный</p>
-            <p>Цена: 4500 ₽</p>
-            <button>Добавить в корзину</button>
-        </div>
-    </section>
+    <!-- Каталог товаров (будет заполняться JS) -->
+    <section id="product-list"></section>
 
-    <script src="script.js"></script
+    <script src="script.js"></script>
+</body>
+</html>
