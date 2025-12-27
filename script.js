@@ -16,7 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const filterBtn = document.getElementById("filter-btn");
     const searchBtn = document.getElementById("search-btn");
 
-    let cart = [];
+    // Глобальная корзина
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
     // Рендер товаров
     function renderProducts() {
@@ -52,23 +53,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // Кнопка корзины
                 div.querySelector("button").addEventListener("click", () => {
-                    cart.push(p);
+                    // Используем глобальную cart
+                    const existing = cart.find(item => item.name === p.name);
+                    if (existing) {
+                        existing.qty += 1;
+                    } else {
+                        cart.push({...p, qty: 1});
+                    }
 
+                    // Сохраняем корзину
                     localStorage.setItem("cart", JSON.stringify(cart));
 
+                    // Обновляем UI
                     updateCartUI();
-                    alert(`${p.name} добавлено в корзину`);
                 });
             }
         });
     }
 
+    // Обновление UI корзины
     function updateCartUI() {
         const cartCount = document.getElementById("cart-count");
-        const cartTotal = document.getElementById("cart-total");
-        const total = cart.reduce((sum, item) => sum + item.price, 0);
-        cartCount.innerText = cart.length;
-        cartTotal.innerText = total + " ₽";
+        const cartTotal = document.getElementById("cart-total"); // добавь в html, если хочешь показывать сумму
+        let total = 0;
+        let count = 0;
+
+        cart.forEach(item => {
+            total += item.price * item.qty;
+            count += item.qty;
+        });
+
+        cartCount.innerText = count;
+        if(cartTotal) cartTotal.innerText = total + " ₽";
     }
 
     // Обработчики
@@ -78,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Первоначальный рендер
     renderProducts();
+    updateCartUI();
 });
 
 
