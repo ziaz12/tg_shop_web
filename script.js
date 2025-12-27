@@ -53,6 +53,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Кнопка корзины
                 div.querySelector("button").addEventListener("click", () => {
                     cart.push(p);
+
+                    localStorage.setItem("cart", JSON.stringify(cart));
+
                     updateCartUI();
                     alert(`${p.name} добавлено в корзину`);
                 });
