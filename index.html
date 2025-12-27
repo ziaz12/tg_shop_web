@@ -4,8 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Тест товаров</title>
+<style>
+    .product-card {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 10px;
+        display: inline-block;
+    }
+</style>
 </head>
 <body>
+
+<header>
+    🛒 Корзина: <span id="cart-count">0</span> товаров
+</header>
 
 <section id="product-list"></section>
 
@@ -17,11 +29,28 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     const productList = document.getElementById("product-list");
+    let cart = [];
 
     products.forEach(p => {
         const div = document.createElement("div");
-        div.innerHTML = `<h3>${p.name}</h3><p>Бренд: ${p.brand}</p><p>Цена: ${p.price} ₽</p>`;
+        div.className = "product-card";
+        div.innerHTML = `
+            <h3>${p.name}</h3>
+            <p>Бренд: ${p.brand}</p>
+            <p>Цена: ${p.price} ₽</p>
+            <button>Добавить в корзину</button>
+        `;
         productList.appendChild(div);
+
+        div.querySelector("button").addEventListener("click", () => {
+            const existing = cart.find(item => item.name === p.name);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({...p, qty: 1});
+            }
+            document.getElementById("cart-count").innerText = cart.reduce((sum, item) => sum + item.qty, 0);
+        });
     });
 });
 </script>
