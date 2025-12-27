@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Товары
+    // Массив товаров
     const products = [
         {name: "Кроссовки Nike Air", brand: "Nike", size: "40", color: "Белый", price: 5000, article: "NA40"},
         {name: "Кроссовки Adidas Runner", brand: "Adidas", size: "39", color: "Черный", price: 4500, article: "AR39"},
@@ -16,11 +16,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const filterBtn = document.getElementById("filter-btn");
     const searchBtn = document.getElementById("search-btn");
 
-    // Корзина
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let cart = [];
 
+    // Рендер товаров
     function renderProducts() {
         productList.innerHTML = "";
+
         const search = searchInput.value.toLowerCase();
         const brand = brandFilter.value;
         const size = sizeFilter.value;
@@ -35,10 +36,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 (!color || p.color === color) &&
                 (!priceMax || p.price <= priceMax);
 
-            if (matches) {
+            if(matches){
                 const div = document.createElement("div");
                 div.className = "product-card";
                 div.innerHTML = `
+                    <img src="https://via.placeholder.com/150" alt="${p.name}">
                     <h3>${p.name}</h3>
                     <p>Бренд: ${p.brand}</p>
                     <p>Размер: ${p.size}</p>
@@ -48,15 +50,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
                 productList.appendChild(div);
 
-                // Кнопка "Добавить в корзину"
+                // Кнопка корзины
                 div.querySelector("button").addEventListener("click", () => {
-                    const existing = cart.find(item => item.name === p.name);
-                    if (existing) {
-                        existing.qty += 1;
-                    } else {
-                        cart.push({...p, qty: 1});
-                    }
-                    localStorage.setItem("cart", JSON.stringify(cart));
+                    cart.push(p);
                     updateCartUI();
                     alert(`${p.name} добавлено в корзину`);
                 });
@@ -66,25 +62,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateCartUI() {
         const cartCount = document.getElementById("cart-count");
-        let total = 0;
-        let count = 0;
-        cart.forEach(item => {
-            total += item.price * item.qty;
-            count += item.qty;
-        });
-        cartCount.innerText = count;
+        const cartTotal = document.getElementById("cart-total");
+        const total = cart.reduce((sum, item) => sum + item.price, 0);
+        cartCount.innerText = cart.length;
+        cartTotal.innerText = total + " ₽";
     }
 
     // Обработчики
     filterBtn.addEventListener("click", renderProducts);
     searchBtn.addEventListener("click", renderProducts);
-    searchInput.addEventListener("keypress", (e) => { if (e.key === "Enter") renderProducts(); });
+    searchInput.addEventListener("keypress", (e) => { if(e.key === "Enter") renderProducts(); });
 
-    // Первичный рендер
-    updateCartUI();
+    // Первоначальный рендер
     renderProducts();
 });
-
 
 
 

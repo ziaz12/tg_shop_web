@@ -1,91 +1,63 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Каталог обуви</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-    }
-    header {
-        padding: 10px;
-        background-color: #f2f2f2;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    #cart-count {
-        font-weight: bold;
-    }
-    .product-card {
-        border: 1px solid #ccc;
-        padding: 10px;
-        margin: 10px;
-        display: inline-block;
-        width: 200px;
-        vertical-align: top;
-        text-align: center;
-    }
-    .product-card button {
-        margin-top: 5px;
-        padding: 5px 10px;
-        cursor: pointer;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог обуви</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <header class="top-bar">
+    <div class="logo">👟 Магазин</div>
 
-<header>
-    👟 Магазин
-    🛒 Корзина: <span id="cart-count">0</span> товаров
+    <div class="header-right">
+        <div id="balance-bar">
+            💰 <span id="user-balance">0 ₽</span>
+        </div>
+
+        <button id="cart-button">
+            <img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" width="22">
+            <span id="cart-count">0</span>
+        </button>
+    </div>
 </header>
 
-<section id="product-list"></section>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const products = [
-        {name: "Тестовые кроссовки Nike", brand: "Nike", price: 5000},
-        {name: "Тестовые кроссовки Adidas", brand: "Adidas", price: 4500}
-    ];
+    <section id="search-section">
+        <input type="text" placeholder="Поиск по названию или номеру" id="search-input">
+        <button id="search-btn">Найти</button>
+    </section>
 
-    const productList = document.getElementById("product-list");
-    let cart = [];
+    <section id="filters">
+        <select id="brand-filter">
+            <option value="">Все бренды</option>
+            <option value="Nike">Nike</option>
+            <option value="Adidas">Adidas</option>
+            <option value="Puma">Puma</option>
+        </select>
 
-    function updateCart() {
-        const count = cart.reduce((sum, item) => sum + item.qty, 0);
-        document.getElementById("cart-count").innerText = count;
-    }
+        <select id="size-filter">
+            <option value="">Размер</option>
+            <option value="38">38</option>
+            <option value="39">39</option>
+            <option value="40">40</option>
+        </select>
 
-    products.forEach(p => {
-        const div = document.createElement("div");
-        div.className = "product-card";
-        div.innerHTML = `
-            <h3>${p.name}</h3>
-            <p>Бренд: ${p.brand}</p>
-            <p>Цена: ${p.price} ₽</p>
-            <button>Добавить в корзину</button>
-        `;
-        productList.appendChild(div);
+        <select id="color-filter">
+            <option value="">Цвет</option>
+            <option value="Белый">Белый</option>
+            <option value="Черный">Черный</option>
+            <option value="Синий">Синий</option>
+        </select>
 
-        div.querySelector("button").addEventListener("click", () => {
-            const existing = cart.find(item => item.name === p.name);
-            if (existing) {
-                existing.qty += 1;
-            } else {
-                cart.push({...p, qty: 1});
-            }
-            updateCart();
-            alert(`${p.name} добавлено в корзину`);
-        });
-    });
+        <input type="number" placeholder="Цена до" id="price-filter">
+        <button id="filter-btn">Применить</button>
+    </section>
 
-    updateCart();
-});
-</script>
+    <!-- Каталог товаров (будет заполняться JS) -->
+    <section id="product-list"></section>
 
+    <script src="script.js"></script>
 </body>
 </html>
-
 
