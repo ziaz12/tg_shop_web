@@ -1,4 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
+    
+    cart = JSON.parse(localStorage.getItem("cart")) || [];
+    updateCartUI();
+
+
     // Массив товаров
     const products = [
         {name: "Кроссовки Nike Air", brand: "Nike", size: "40", color: "Белый", price: 5000, article: "NA40"},
@@ -52,21 +57,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // Кнопка корзины
                 div.querySelector("button").addEventListener("click", () => {
-                    cart.push(p);
+                    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+                    const existing = cart.find(item => item.name === p.name);
+                    if (existing) {
+                        existing.qty += 1;
+                    } else {
+                        cart.push({...p, qty: 1});
+                    }
+                    localStorage.setItem("cart", JSON.stringify(cart));
                     updateCartUI();
                     alert(`${p.name} добавлено в корзину`);
                 });
+
             }
         });
     }
 
     function updateCartUI() {
-        const cartCount = document.getElementById("cart-count");
-        const cartTotal = document.getElementById("cart-total");
-        const total = cart.reduce((sum, item) => sum + item.price, 0);
-        cartCount.innerText = cart.length;
-        cartTotal.innerText = total + " ₽";
-    }
+    const cartCount = document.getElementById("cart-count");
+    const cartTotal = document.getElementById("cart-total");
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let total = 0;
+    let count = 0;
+    cart.forEach(item => {
+        total += item.price * item.qty;
+        count += item.qty;
+    });
+
+    cartCount.innerText = count;
+    cartTotal.innerText = total + " ₽";
+}
+
 
     // Обработчики
     filterBtn.addEventListener("click", renderProducts);
