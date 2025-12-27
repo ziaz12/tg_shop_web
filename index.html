@@ -3,19 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Тест товаров</title>
+<title>Каталог обуви</title>
 <style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    header {
+        padding: 10px;
+        background-color: #f2f2f2;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    #cart-count {
+        font-weight: bold;
+    }
     .product-card {
         border: 1px solid #ccc;
         padding: 10px;
         margin: 10px;
         display: inline-block;
+        width: 200px;
+        vertical-align: top;
+        text-align: center;
+    }
+    .product-card button {
+        margin-top: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
     }
 </style>
 </head>
 <body>
 
 <header>
+    👟 Магазин
     🛒 Корзина: <span id="cart-count">0</span> товаров
 </header>
 
@@ -30,6 +52,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const productList = document.getElementById("product-list");
     let cart = [];
+
+    function updateCart() {
+        const count = cart.reduce((sum, item) => sum + item.qty, 0);
+        document.getElementById("cart-count").innerText = count;
+    }
 
     products.forEach(p => {
         const div = document.createElement("div");
@@ -49,12 +76,16 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 cart.push({...p, qty: 1});
             }
-            document.getElementById("cart-count").innerText = cart.reduce((sum, item) => sum + item.qty, 0);
+            updateCart();
+            alert(`${p.name} добавлено в корзину`);
         });
     });
+
+    updateCart();
 });
 </script>
 
 </body>
 </html>
+
 
