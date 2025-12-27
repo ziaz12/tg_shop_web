@@ -2,22 +2,60 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Корзина</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <header class="top-bar">
+        <div class="logo">👟 Магазин</div>
+        <div class="header-right">
+            <button onclick="window.history.back()">⬅ Назад</button>
+        </div>
+    </header>
 
-<header class="top-bar">
-    <button onclick="history.back()">⬅ Назад</button>
-    <h2>🛒 Корзина</h2>
-</header>
+    <h2 style="padding: 20px;">Ваша корзина</h2>
+    <section id="cart-list" style="padding: 20px;"></section>
+    <div id="cart-summary" style="padding: 20px; font-weight: bold;"></div>
 
-<section id="cart-items"></section>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const cartList = document.getElementById("cart-list");
+        const cartSummary = document.getElementById("cart-summary");
 
-<div id="cart-summary">
-    <b>Итого: <span id="cart-total">0 ₽</span></b>
-</div>
+        // Получаем корзину из localStorage
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-<script src="cart.js"></script>
+        function renderCart() {
+            cartList.innerHTML = "";
+            if(cart.length === 0){
+                cartList.innerHTML = "<p>Корзина пуста</p>";
+                cartSummary.innerHTML = "";
+                return;
+            }
+
+            let total = 0;
+            cart.forEach(item => {
+                const itemDiv = document.createElement("div");
+                itemDiv.style.border = "1px solid #ccc";
+                itemDiv.style.padding = "10px";
+                itemDiv.style.marginBottom = "10px";
+                itemDiv.innerHTML = `
+                    <h3>${item.name}</h3>
+                    <p>Бренд: ${item.brand}</p>
+                    <p>Цена: ${item.price} ₽</p>
+                    <p>Количество: ${item.qty}</p>
+                    <p>Сумма: ${item.price * item.qty} ₽</p>
+                `;
+                cartList.appendChild(itemDiv);
+                total += item.price * item.qty;
+            });
+
+            cartSummary.innerText = "Итого: " + total + " ₽";
+        }
+
+        renderCart();
+    });
+    </script>
 </body>
 </html>
