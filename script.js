@@ -1,10 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Глобальная корзина
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
+    // Массив товаров
     const products = [
         {name: "Кроссовки Nike Air", brand: "Nike", size: "40", color: "Белый", price: 5000, article: "NA40"},
-        {name: "Кроссовки Adidas Runner", brand: "Adidas", size: "39", color: "Черный", price: 4500, article: "AR39"},
-        {name: "Кроссовки Puma RS-X", brand: "Puma", size: "38", color: "Синий", price: 4800, article: "PR38"},
-        {name: "Кроссовки Nike Zoom", brand: "Nike", size: "39", color: "Черный", price: 5500, article: "NZ39"}
+        {name: "Кроссовки Adidas Runner", brand: "Adidas", size: "39", color: "Черный", price: 4500, article: "AR39"}
     ];
 
     const productList = document.getElementById("product-list");
@@ -16,18 +17,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const filterBtn = document.getElementById("filter-btn");
     const searchBtn = document.getElementById("search-btn");
 
-    // Глобальная корзина
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    updateCartUI();
-
     function renderProducts() {
         productList.innerHTML = "";
-
         const search = searchInput.value.toLowerCase();
         const brand = brandFilter.value;
         const size = sizeFilter.value;
         const color = colorFilter.value;
-        const priceMax = parseInt(priceFilter.value) || Infinity;
+        const priceMax = parseInt(priceFilter.value);
 
         products.forEach(p => {
             const matches =
@@ -35,13 +31,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 (!brand || p.brand === brand) &&
                 (!size || p.size === size) &&
                 (!color || p.color === color) &&
-                (p.price <= priceMax);
+                (!priceMax || p.price <= priceMax);
 
             if(matches){
                 const div = document.createElement("div");
                 div.className = "product-card";
                 div.innerHTML = `
-                    <img src="https://via.placeholder.com/150" alt="${p.name}">
                     <h3>${p.name}</h3>
                     <p>Бренд: ${p.brand}</p>
                     <p>Размер: ${p.size}</p>
@@ -83,7 +78,11 @@ document.addEventListener("DOMContentLoaded", () => {
     searchBtn.addEventListener("click", renderProducts);
     searchInput.addEventListener("keypress", (e) => { if(e.key === "Enter") renderProducts(); });
 
+    // Изначальный рендер
     renderProducts();
+    updateCartUI();
 });
+
+
 
 
